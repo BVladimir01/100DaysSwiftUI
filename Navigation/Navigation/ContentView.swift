@@ -8,17 +8,15 @@
 import SwiftUI
 
 struct ContentView: View {
+    
+    @State private var pathStore = PathStore()
+    
     var body: some View {
-        NavigationStack {
-            List {
-                NavigationLink("Mint", value: Color.mint)
-                NavigationLink("Pink", value: Color.pink)
-                NavigationLink("Teal", value: Color.teal)
-            }
-            .navigationDestination(for: Color.self) { color in
-                color
-            }
-            .navigationTitle("Colors")
+        NavigationStack(path: $pathStore.path) {
+            DetaiView(number: 0, path: $pathStore.path)
+                .navigationDestination(for: Int.self) { num in
+                    DetaiView(number: num, path: $pathStore.path)
+                }
         }
     }
 }

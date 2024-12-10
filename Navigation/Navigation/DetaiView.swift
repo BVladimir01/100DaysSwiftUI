@@ -8,18 +8,21 @@
 import SwiftUI
 
 struct DetaiView: View {
+    
     var number: Int
+    @Binding var path: NavigationPath
     
     var body: some View {
-        Text("View with number \(number)")
-    }
-    
-    init(number: Int) {
-        self.number = number
-        print("creating View number \(number)")
+        NavigationLink("Go to random number", value: Int.random(in: 0..<100))
+            .navigationTitle("Number: \(number)")
+            .toolbar {
+                Button("Home") {
+                    path = NavigationPath()
+                }
+            }
     }
 }
 
-#Preview {
-    DetaiView(number: 10)
-}
+//#Preview {
+//    DetaiView(number: 10)
+//}

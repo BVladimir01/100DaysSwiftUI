@@ -12,6 +12,7 @@
 		E7D006022D06D205004E59F7 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E7D006012D06D205004E59F7 /* Assets.xcassets */; };
 		E7D006052D06D205004E59F7 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E7D006042D06D205004E59F7 /* Preview Assets.xcassets */; };
 		E7D0060C2D06D26C004E59F7 /* DetaiView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7D0060B2D06D26C004E59F7 /* DetaiView.swift */; };
+		E7D006322D08516A004E59F7 /* PathStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7D006312D08516A004E59F7 /* PathStore.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -21,6 +22,7 @@
 		E7D006012D06D205004E59F7 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		E7D006042D06D205004E59F7 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		E7D0060B2D06D26C004E59F7 /* DetaiView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetaiView.swift; sourceTree = "<group>"; };
+		E7D006312D08516A004E59F7 /* PathStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PathStore.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -56,6 +58,7 @@
 				E7D005FD2D06D204004E59F7 /* NavigationApp.swift */,
 				E7D005FF2D06D204004E59F7 /* ContentView.swift */,
 				E7D0060B2D06D26C004E59F7 /* DetaiView.swift */,
+				E7D006312D08516A004E59F7 /* PathStore.swift */,
 				E7D006012D06D205004E59F7 /* Assets.xcassets */,
 				E7D006032D06D205004E59F7 /* Preview Content */,
 			);
@@ -140,6 +143,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E7D006322D08516A004E59F7 /* PathStore.swift in Sources */,
 				E7D006002D06D204004E59F7 /* ContentView.swift in Sources */,
 				E7D0060C2D06D26C004E59F7 /* DetaiView.swift in Sources */,
 				E7D005FE2D06D204004E59F7 /* NavigationApp.swift in Sources */,
