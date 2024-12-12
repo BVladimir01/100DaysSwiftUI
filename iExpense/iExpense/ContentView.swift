@@ -37,7 +37,10 @@ struct ContentView: View {
                     showingAddExpense = true
                 }
             }
-            .sheet(isPresented: $showingAddExpense) {
+            //            .sheet(isPresented: $showingAddExpense) {
+            //                AddView(expenses: expenses)
+            //            }
+            .navigationDestination(isPresented: $showingAddExpense) {
                 AddView(expenses: expenses)
             }
         }
