@@ -47,15 +47,16 @@ struct ContentView: View {
     
     private var listLayout: some View {
         List(missions) { mission in
-            NavigationLink {
-                MissionView(mission: mission, astronauts: astranauts)
-            } label : {
+            NavigationLink(value: mission) {
                 HStack {
                     formattedListDescription(for: mission)
                     Spacer()
                     formattedListImage(for: mission)
                         .padding(.horizontal)
                 }
+            }
+            .navigationDestination(for: Mission.self) { mission in
+                MissionView(mission: mission, astronauts: astranauts)
             }
             .listRowBackground(Color.darkBackground)
         }
@@ -88,14 +89,16 @@ struct ContentView: View {
         ScrollView {
             LazyVGrid(columns: [GridItem(.adaptive(minimum: 150))]) {
                 ForEach(missions) { mission in
-                    NavigationLink {
-                        MissionView(mission: mission, astronauts: astranauts)
-                    } label: {
+                    NavigationLink(value: mission) {
                         badge(for: mission)
                             .padding()
                     }
                 }
             }
+            .navigationDestination(for: Mission.self) { mission in
+                MissionView(mission: mission, astronauts: astranauts)
+            }
+
         }
     }
     

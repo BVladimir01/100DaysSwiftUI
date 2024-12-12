@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct Mission: Codable, Identifiable {
+struct Mission: Codable, Identifiable, Hashable {
     
     let id: Int
     let crew: [CrewMember]
@@ -26,7 +26,7 @@ struct Mission: Codable, Identifiable {
         "apollo\(id)"
     }
     
-    struct CrewMember: Codable {
+    struct CrewMember: Codable, Hashable {
         let name: String
         let role: String
     }
