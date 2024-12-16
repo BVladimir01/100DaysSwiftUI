@@ -12,7 +12,7 @@ class HabitsStore {
     
     var habits: [Habit] {
         didSet {
-            
+            save()
         }
     }
     

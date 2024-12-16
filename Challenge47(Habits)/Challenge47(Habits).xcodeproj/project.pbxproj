@@ -13,6 +13,8 @@
 		E7D006C92D0F6FD3004E59F7 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E7D006C82D0F6FD3004E59F7 /* Preview Assets.xcassets */; };
 		E7D006D02D0F6FEC004E59F7 /* Models.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7D006CF2D0F6FEC004E59F7 /* Models.swift */; };
 		E7D006D22D0F711C004E59F7 /* HabitsStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7D006D12D0F711C004E59F7 /* HabitsStore.swift */; };
+		E7D006D42D0FDE9A004E59F7 /* DetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7D006D32D0FDE9A004E59F7 /* DetailView.swift */; };
+		E7D006D62D0FDEA3004E59F7 /* EditView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7D006D52D0FDEA3004E59F7 /* EditView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -23,6 +25,8 @@
 		E7D006C82D0F6FD3004E59F7 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		E7D006CF2D0F6FEC004E59F7 /* Models.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Models.swift; sourceTree = "<group>"; };
 		E7D006D12D0F711C004E59F7 /* HabitsStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HabitsStore.swift; sourceTree = "<group>"; };
+		E7D006D32D0FDE9A004E59F7 /* DetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailView.swift; sourceTree = "<group>"; };
+		E7D006D52D0FDEA3004E59F7 /* EditView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -57,6 +61,8 @@
 			children = (
 				E7D006C12D0F6FD2004E59F7 /* Challenge47_Habits_App.swift */,
 				E7D006C32D0F6FD2004E59F7 /* ContentView.swift */,
+				E7D006D32D0FDE9A004E59F7 /* DetailView.swift */,
+				E7D006D52D0FDEA3004E59F7 /* EditView.swift */,
 				E7D006D12D0F711C004E59F7 /* HabitsStore.swift */,
 				E7D006CF2D0F6FEC004E59F7 /* Models.swift */,
 				E7D006C52D0F6FD3004E59F7 /* Assets.xcassets */,
@@ -145,7 +151,9 @@
 			files = (
 				E7D006D22D0F711C004E59F7 /* HabitsStore.swift in Sources */,
 				E7D006D02D0F6FEC004E59F7 /* Models.swift in Sources */,
+				E7D006D62D0FDEA3004E59F7 /* EditView.swift in Sources */,
 				E7D006C42D0F6FD2004E59F7 /* ContentView.swift in Sources */,
+				E7D006D42D0FDE9A004E59F7 /* DetailView.swift in Sources */,
 				E7D006C22D0F6FD2004E59F7 /* Challenge47_Habits_App.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
