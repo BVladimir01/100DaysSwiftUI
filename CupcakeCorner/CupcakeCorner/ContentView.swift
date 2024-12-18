@@ -21,8 +21,6 @@ struct ContentView: View {
                             Text(cakeType.rawValue)
                         }
                     }
-//                    .pickerStyle(.segmented)
-//                    .labelsHidden()
                     Stepper("Number of cakes: \(order.quantity)", value: $order.quantity, in: 3...20)
                 }
                 Section {
