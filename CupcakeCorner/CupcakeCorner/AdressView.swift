@@ -9,28 +9,33 @@ import SwiftUI
 
 struct AdressView: View {
     
-    @Bindable var order: Order
+    @Bindable var orderStore: OrderStore
+    @Binding var path: NavigationPath
     
     private var checkoutIsDisabled: Bool {
-        order.name.isEmpty || order.streetAdress.isEmpty || order.city.isEmpty || order.zip.isEmpty
+        let address = orderStore.order.address
+        return ![address.name, address.streetAddress, address.city, address.zip].allSatisfy(validateAddress)
     }
     
     var body: some View {
         Form {
-            Section("Adress info") {
-                TextField("Name", text: $order.name)
-                TextField("Adress", text: $order.streetAdress)
-                TextField("City", text: $order.city)
-                TextField("zip", text: $order.zip)
+            Section("Address info") {
+                TextField("Name", text: $orderStore.order.address.name)
+                TextField("Adress", text: $orderStore.order.address.streetAddress)
+                TextField("City", text: $orderStore.order.address.city)
+                TextField("zip", text: $orderStore.order.address.zip)
             }
             Section {
-                NavigationLink("Checkout") {
-                    CheckView(order: order)
-                }
-                .disabled(checkoutIsDisabled)
+                NavigationLink("Checkout", value: ViewHierarchy.checkOutView)
+                    .disabled(checkoutIsDisabled)
             }
         }
         .navigationTitle("Delivery details")
         .navigationBarTitleDisplayMode(.inline)
     }
+    
+    private func validateAddress(entry: String) -> Bool {
+        !entry.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+    }
+    
 }

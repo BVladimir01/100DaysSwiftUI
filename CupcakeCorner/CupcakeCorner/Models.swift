@@ -7,26 +7,27 @@
 
 import SwiftUI
 
-@Observable
-class Order: Codable {
+
+struct Order: Codable {
 
     enum CodingKeys: String, CodingKey {
-        case _type = "type"
-        case _quantity = "quantity"
-//        case _specialOptionsEnables = "specialOptionsEnabled"
-        case _extraFrosting = "extraFrosting"
-        case _addSprinkles = "addSprinkles"
-        case _name = "name"
-        case _streetAdress = "streetAdress"
-        case _city = "city"
-        case _zip = "zip"
+        case type = "type"
+        case quantity = "quantity"
+        case extraFrosting = "extraFrosting"
+        case addSprinkles = "addSprinkles"
+        case address = "address"
+        
     }
     
     enum Types: String , CaseIterable, Codable {
-        case strawberry = "Strawberry"
-        case vanilla = "Vanilla"
-        case chocolate = "Chocolate"
-        case rainbow = "Rainbow"
+        case strawberry, vanilla, chocolate, rainbow
+    }
+    
+    struct Address: Codable {
+        var name = ""
+        var streetAddress = ""
+        var city = ""
+        var zip = ""
     }
     
     var type: Types = .strawberry
@@ -44,10 +45,7 @@ class Order: Codable {
     var extraFrosting = false
     var addSprinkles = false
     
-    var name = ""
-    var streetAdress = ""
-    var city = ""
-    var zip = ""
+    var address = Address()
     
     var cost: Decimal {
         var total = Decimal.zero
@@ -62,3 +60,46 @@ class Order: Codable {
     }
 }
 
+enum ViewHierarchy: Hashable {
+    case rootView, adressView, checkOutView
+}
+
+@Observable
+class OrderStore {
+    
+    var order: Order {
+        didSet {
+            save()
+        }
+    }
+    
+    init() {
+        if let orderData = UserDefaults.standard.data(forKey: orderSaveKey) {
+            if let loadedOrder = try? JSONDecoder().decode(Order.self, from: orderData) {
+                order = loadedOrder
+                return
+            }
+        }
+        order = Order()
+        if let addressData = UserDefaults.standard.data(forKey: orderAddressSaveKey) {
+            if let loadedAddress = try? JSONDecoder().decode(Order.Address.self, from: addressData) {
+                order.address = loadedAddress
+            }
+        }
+    }
+    
+    
+    private func save() {
+        let encoder = JSONEncoder()
+        guard let addressData = try? encoder.encode(order.address), let orderData = try? encoder.encode(order) else { return }
+        UserDefaults.standard.set(addressData, forKey: orderAddressSaveKey)
+        UserDefaults.standard.set(orderData, forKey: orderSaveKey)
+    }
+    
+    func deleteOrderInfoExceptAddress() {
+        UserDefaults.standard.removeObject(forKey: orderSaveKey)
+    }
+    
+    private let orderAddressSaveKey = "addressSaveKey"
+    private let orderSaveKey = "orderSaveKey"
+}

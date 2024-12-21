@@ -9,9 +9,13 @@ import SwiftUI
 
 struct CheckView: View {
     
-    var order: Order
+    var orderStore: OrderStore
+    @Binding var path: NavigationPath
     @State private var responseMessage = "response message"
     @State private var showAlert = false
+    @State private var requestFailed = false
+    @State private var requestErrorMessage = "Unknown error occured"
+    
     var body: some View {
         ScrollView {
             VStack {
@@ -33,7 +37,7 @@ struct CheckView: View {
                         fatalError()
                     }
                 }
-                Text("Your total is \(order.cost.formatted(.currency(code: "USD")))")
+                Text("Your total is \(orderStore.order.cost.formatted(.currency(code: "USD")))")
                     .font(.headline)
                 Button {
                     Task {
@@ -45,9 +49,19 @@ struct CheckView: View {
                 }
                 .padding()
                 .alert("Thank you", isPresented: $showAlert) {
-                    Button("Ok") { }
+                    Button("Ok") {
+                        orderStore.deleteOrderInfoExceptAddress()
+                        path.removeLast(2)
+                    }
                 } message: {
                     Text(responseMessage)
+                }
+                .alert("Error", isPresented: $requestFailed) {
+                    Button("OK") {
+                        path.removeLast(2)
+                    }
+                } message: {
+                    Text(requestErrorMessage)
                 }
             }
             .frame(maxWidth: .infinity)
@@ -58,7 +72,7 @@ struct CheckView: View {
     }
     
     private func placeOrder() async {
-        guard let data = try? JSONEncoder().encode(order) else { return }
+        guard let data = try? JSONEncoder().encode(orderStore.order) else { return }
         let url = URL(string: "https://reqres.in/api/cupcakes")!
         var request = URLRequest(url: url)
         request.httpMethod = "POST"
@@ -70,10 +84,12 @@ struct CheckView: View {
             showAlert = true
         } catch {
             print(error.localizedDescription)
+            requestFailed = true
+            requestErrorMessage = error.localizedDescription
         }
     }
 }
 
-#Preview {
-    CheckView(order: Order())
-}
+//#Preview {
+//    CheckView(order: Order())
+//}
