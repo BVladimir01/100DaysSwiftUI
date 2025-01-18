@@ -10,30 +10,40 @@ import SwiftUI
 
 struct ContentView: View {
     
-    @Query var students: [Student]
+    @Query var books: [Book]
     @Environment(\.modelContext) var modelContext
- 
+    
+    @State private var isAddingBook = false
+    
     var body: some View {
         NavigationStack {
-            List(students) { student in
-                Text(student.name)
-            }
-            Button("add student") {
-                print("pressed")
-                let firstNames = ["Ginny", "Harry", "Hermione", "Luna", "Ron"]
-                let newStudent = Student(name: firstNames.randomElement()!)
-                print(newStudent.name)
-                modelContext.insert(newStudent)
-                
-                do {
-                    try modelContext.save()
-                } catch {
-                    print("Failed to save: \(error)")
+            List {
+                ForEach(books) { book in
+                    NavigationLink(value: book) {
+                        HStack {
+                            EmojiRatingView(rating: book.rating)
+                                .font(.largeTitle)
+                            VStack(alignment: .leading) {
+                                Text(book.title)
+                                    .font(.headline)
+                                Text(book.author)
+                                    .font(.footnote)
+                            }
+                        }
+                    }
                 }
-                
             }
-            .font(.largeTitle)
-            .navigationTitle("Classroom")
+                .sheet(isPresented: $isAddingBook) {
+                    AddBookView()
+                }
+                .navigationTitle("Bookworm")
+                .toolbar {
+                    ToolbarItem(placement: .topBarTrailing) {
+                        Button("Add book", systemImage: "plus") {
+                            isAddingBook.toggle()
+                        }
+                    }
+                }
         }
     }
 }
