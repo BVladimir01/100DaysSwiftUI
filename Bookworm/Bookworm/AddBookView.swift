@@ -34,7 +34,11 @@ struct AddBookView: View {
                 
                 Section("Write review") {
                     TextEditor(text: $review)
-                    RatingView(rating: $rating, label: "Rating")
+                    HStack {
+                        Text("Rating")
+                        Spacer()
+                        RatingView(rating: $rating)
+                    }
                     }
                 
                 Section {

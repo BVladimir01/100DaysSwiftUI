@@ -22,7 +22,7 @@ struct EmojiRatingView: View {
         case 4:
             Text("🙂")
         case 5...:
-            Text("😀")
+            Text("🤩")
         default:
             Text("error")
         }

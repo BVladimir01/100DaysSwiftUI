@@ -16,12 +16,9 @@ struct RatingView: View {
     var offImage: Image? = nil
     var onColor: Color = .yellow
     var offColor: Color = .gray
-    var label = ""
     
     var body: some View {
         HStack {
-            Text(label)
-            Spacer()
             ForEach(1..<(maxRating + 1), id: \.self) { number in
                 Button {
                     rating = number
@@ -41,6 +38,7 @@ struct RatingView: View {
             return offImage ?? onImage
         }
     }
+    
 }
 
 #Preview {

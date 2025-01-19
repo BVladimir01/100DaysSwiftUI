@@ -10,7 +10,7 @@ import SwiftUI
 
 struct ContentView: View {
     
-    @Query var books: [Book]
+    @Query(sort: [SortDescriptor(\Book.rating, order: .reverse), SortDescriptor(\Book.author), SortDescriptor(\Book.title)]) var books: [Book]
     @Environment(\.modelContext) var modelContext
     
     @State private var isAddingBook = false
@@ -32,30 +32,35 @@ struct ContentView: View {
                         }
                     }
                 }
-            }
-                .sheet(isPresented: $isAddingBook) {
-                    AddBookView()
+                .onDelete { indexSet in
+                    deleteBooks(at: indexSet)
                 }
-                .navigationTitle("Bookworm")
-                .toolbar {
-                    ToolbarItem(placement: .topBarTrailing) {
-                        Button("Add book", systemImage: "plus") {
-                            isAddingBook.toggle()
-                        }
+            }
+            .navigationDestination(for: Book.self) { book in
+                DetailView(book: book)
+            }
+            .sheet(isPresented: $isAddingBook) {
+                AddBookView()
+            }
+            .navigationTitle("Bookworm")
+            .toolbar {
+                ToolbarItem(placement: .topBarTrailing) {
+                    Button("Add book", systemImage: "plus") {
+                        isAddingBook.toggle()
                     }
                 }
+                ToolbarItem(placement: .topBarLeading) {
+                    EditButton()
+                }
+            }
         }
     }
-}
-
-@Model
-class Student: Identifiable {
-    var id: UUID
-    var name: String
     
-    init(id: UUID = UUID(), name: String) {
-        self.id = id
-        self.name = name
+    private func deleteBooks(at offsets: IndexSet) {
+        for offset in offsets {
+            let book = books[offset]
+            modelContext.delete(book)
+        }
     }
 }
 
