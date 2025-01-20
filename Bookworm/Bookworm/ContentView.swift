@@ -17,30 +17,9 @@ struct ContentView: View {
     
     var body: some View {
         NavigationStack {
-            List {
-                ForEach(books) { book in
-                    NavigationLink(value: book) {
-                        HStack {
-                            EmojiRatingView(rating: book.rating)
-                                .font(.largeTitle)
-                            VStack(alignment: .leading) {
-                                Text(book.title)
-                                    .font(.headline)
-                                Text(book.author)
-                                    .font(.footnote)
-                            }
-                        }
-                    }
-                }
-                .onDelete { indexSet in
-                    deleteBooks(at: indexSet)
-                }
-            }
+            booksListView
             .navigationDestination(for: Book.self) { book in
                 DetailView(book: book)
-            }
-            .sheet(isPresented: $isAddingBook) {
-                AddBookView()
             }
             .navigationTitle("Bookworm")
             .toolbar {
@@ -53,6 +32,36 @@ struct ContentView: View {
                     EditButton()
                 }
             }
+            .sheet(isPresented: $isAddingBook) {
+                AddBookView()
+            }
+        }
+    }
+    
+    private var booksListView: some View {
+        List {
+            ForEach(books) { book in
+                NavigationLink(value: book) {
+                    listLabel(for: book)
+                }
+            }
+            .onDelete { indexSet in
+                deleteBooks(at: indexSet)
+            }
+        }
+    }
+    
+    private func listLabel(for book: Book) -> some View {
+        HStack {
+            EmojiRatingView(rating: book.rating)
+                .font(.largeTitle)
+            VStack(alignment: .leading) {
+                Text(book.title)
+                    .font(.headline)
+                Text(book.author)
+                    .font(.footnote)
+            }
+            .foregroundStyle(book.rating == 1 ? .red : .primary)
         }
     }
     
