@@ -50,17 +50,31 @@ struct DetailView: View {
         }
     }
     
+    @ViewBuilder private var mainContentView: some View {
+        Text(book.author)
+            .font(.title)
+            .foregroundStyle(.secondary)
+        Text(book.review)
+            .padding()
+    }
+    
+    private var dateView: some View {
+        let addDate = book.addDate?.formatted(date: .abbreviated, time: .shortened) ?? "some day"
+        return HStack {
+            Spacer()
+            Text("Book added on \(addDate)")
+        }
+    }
+    
     private var detailScrollView: some View {
         ScrollView {
             genreView
             .padding()
-            Text(book.author)
-                .font(.title)
-                .foregroundStyle(.secondary)
-            Text(book.review)
-                .padding()
+            mainContentView
             RatingView(rating: .constant(book.rating))
                 .font(.largeTitle)
+                .padding(.bottom)
+            dateView
         }
         .scrollBounceBehavior(.basedOnSize)
     }

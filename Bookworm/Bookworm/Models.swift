@@ -6,7 +6,7 @@
 //
 
 import SwiftData
-
+import Foundation
 
 @Model
 class Book {
@@ -15,6 +15,7 @@ class Book {
     var genre: Genre
     var rating: Int
     var review: String
+    var addDate: Date?
     
     init(title: String, author: String, genre: Genre, rating: Int, review: String) {
         self.title = title
@@ -22,6 +23,7 @@ class Book {
         self.genre = genre
         self.rating = rating
         self.review = review
+        self.addDate = Date.now
     }
     
     enum Genre: String, CaseIterable, Identifiable, Codable {
