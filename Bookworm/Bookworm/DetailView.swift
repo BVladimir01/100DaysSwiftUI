@@ -16,32 +16,7 @@ struct DetailView: View {
     @State private var showingDeleteAlert = false
     
     var body: some View {
-            ScrollView {
-                ZStack(alignment: .bottomTrailing) {
-                    image(for: book.genre)
-                        .resizable()
-                        .scaledToFit()
-                        .foregroundStyle(.brown)
-                    
-                    Text(book.genre.rawValue.uppercased())
-                        .font(.caption)
-                        .fontWeight(.black)
-                        .padding(8)
-                        .foregroundStyle(.white)
-                        .background(.black.opacity(0.75))
-                        .clipShape(.capsule)
-                        .offset(x: -20, y: -20)
-                }
-                .padding()
-                Text(book.author)
-                    .font(.title)
-                    .foregroundStyle(.secondary)
-                Text(book.review)
-                    .padding()
-                RatingView(rating: .constant(book.rating))
-                    .font(.largeTitle)
-            }
-            .scrollBounceBehavior(.basedOnSize)
+        detailScrollView
             .navigationTitle(book.title)
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
@@ -55,6 +30,39 @@ struct DetailView: View {
             } message: {
                 Text("Are you sure?")
             }
+    }
+    
+    private var genreView: some View {
+        ZStack(alignment: .bottomTrailing) {
+            image(for: book.genre)
+                .resizable()
+                .scaledToFit()
+                .foregroundStyle(.brown)
+            
+            Text(book.genre.rawValue.uppercased())
+                .font(.caption)
+                .fontWeight(.black)
+                .padding(8)
+                .foregroundStyle(.white)
+                .background(.black.opacity(0.75))
+                .clipShape(.capsule)
+                .offset(x: -20, y: -20)
+        }
+    }
+    
+    private var detailScrollView: some View {
+        ScrollView {
+            genreView
+            .padding()
+            Text(book.author)
+                .font(.title)
+                .foregroundStyle(.secondary)
+            Text(book.review)
+                .padding()
+            RatingView(rating: .constant(book.rating))
+                .font(.largeTitle)
+        }
+        .scrollBounceBehavior(.basedOnSize)
     }
     
     private func image(for genre: Book.Genre) -> Image {
