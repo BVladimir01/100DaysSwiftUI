@@ -11,13 +11,19 @@ import SwiftUI
 struct UserEditView: View {
     
     @Bindable var user: User
-    @Environment(\.modelContext) var modelContext
+    @Environment(\.modelContext) private var modelContext
+    @Environment(\.dismiss) private var dismiss
     
     var body: some View {
         Form {
             TextField("User's name", text: $user.name)
             TextField("User's city", text: $user.city)
             DatePicker("JoinDate", selection: $user.joinDate, displayedComponents: .date)
+        }
+        .toolbar {
+            ToolbarItem {
+                Button("Confirm") { dismiss() }
+            }
         }
     }
     
