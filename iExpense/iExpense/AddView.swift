@@ -14,6 +14,7 @@ struct AddView: View {
     @Query private var expenses: [ExpenseItem]
     @Environment(\.modelContext) private var modelContext
     @Environment(\.dismiss) var dismiss
+    
     @State private var amount = 0.0
     @State private var name = ""
     @State private var category = ExpenseItem.ExpenseType.personal
