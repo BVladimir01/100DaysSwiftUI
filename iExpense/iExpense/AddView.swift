@@ -5,20 +5,21 @@
 //  Created by Vladimir on 01.12.2024.
 //
 
+import SwiftData
 import SwiftUI
 //import Foundation
 
 struct AddView: View {
     
+    @Query private var expenses: [ExpenseItem]
+    @Environment(\.modelContext) private var modelContext
+    @Environment(\.dismiss) var dismiss
     @State private var amount = 0.0
     @State private var name = ""
     @State private var category = ExpenseItem.ExpenseType.personal
+    @State private var alertIsShown = false
     
     private let categories = ExpenseItem.ExpenseType.allCases
-    
-    var expenses: Expenses
-    @Environment(\.dismiss) var dismiss
-    @State private var alertIsShown = false
     
     var body: some View {
         NavigationStack {
@@ -41,7 +42,7 @@ struct AddView: View {
                         alertIsShown = true
                         return
                     }
-                    expenses.items.append(ExpenseItem(name: name, amount: amount, type: category))
+                    modelContext.insert(ExpenseItem(name: name, amount: amount, type: category))
                     dismiss()
                 }
             }

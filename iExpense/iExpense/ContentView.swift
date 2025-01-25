@@ -5,12 +5,14 @@
 //  Created by Vladimir on 29.11.2024.
 //
 
+
+import SwiftData
 import SwiftUI
-import Observation
 
 struct ContentView: View {
     
-    @State private var expenses = Expenses()
+    @Query private var expenses: [ExpenseItem]
+    @Environment(\.modelContext) private var modelContext
     @State private var showingAddExpense = false
     
     typealias ExpenseType = ExpenseItem.ExpenseType
@@ -19,13 +21,13 @@ struct ContentView: View {
         NavigationStack {
             List{
                 Section("Personal") {
-                    ForEach(expenses.items.filter( { $0.type == ExpenseType.personal} )) { item in
+                    ForEach(expenses.filter( { $0.type == ExpenseType.personal} )) { item in
                         expenseItemView(item: item)
                     }
                     .onDelete(perform: removeItems)
                 }
                 Section("Business") {
-                    ForEach(expenses.items.filter( { $0.type == ExpenseType.business} )) { item in
+                    ForEach(expenses.filter( { $0.type == ExpenseType.business} )) { item in
                         expenseItemView(item: item)
                     }
                     .onDelete(perform: removeItems)
@@ -41,13 +43,16 @@ struct ContentView: View {
             //                AddView(expenses: expenses)
             //            }
             .navigationDestination(isPresented: $showingAddExpense) {
-                AddView(expenses: expenses)
+                AddView()
             }
         }
     }
     
     private func removeItems(at positions: IndexSet) {
-        expenses.items.remove(atOffsets: positions)
+        for index in positions {
+            let deletedItem = expenses[index]
+            modelContext.delete(deletedItem)
+        }
     }
     
     private struct expenseItemView: View {
