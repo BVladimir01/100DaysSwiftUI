@@ -57,6 +57,10 @@ struct ExpensesView: View {
             modelContext.delete(deletedItem)
         }
     }
+    
+    init(sortOrder: [SortDescriptor<ExpenseItem>]) {
+        _expenses = Query(sort: sortOrder)
+    }
 }
 
 
@@ -96,7 +100,7 @@ private extension ExpensesView {
     do {
         let config = ModelConfiguration(isStoredInMemoryOnly: true)
         let modelContainer = try ModelContainer(for: ExpenseItem.self, configurations: config)
-        return ExpensesView()
+        return ExpensesView(sortOrder: [.init(\ExpenseItem.name)])
             .modelContainer(modelContainer)
     } catch {
         return Text(error.localizedDescription)
