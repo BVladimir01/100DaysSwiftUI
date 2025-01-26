@@ -11,40 +11,17 @@ import SwiftUI
 struct ExpensesView: View {
     
     @Query private var expenses: [ExpenseItem]
+    private var expensesToShow: [ExpenseItem] {
+        expenses.filter({filteredTypes.contains($0.type)})
+    }
     @Environment(\.modelContext) private var modelContext
-    private var personalExpensesExist: Bool {
-        !expenses.filter({$0.type == .personal}).isEmpty
-    }
-    private var businessExpensesExist: Bool {
-        !expenses.filter({$0.type == .business}).isEmpty
-    }
+    private var filteredTypes: Set<ExpenseType>
+    
     typealias ExpenseType = ExpenseItem.ExpenseType
     
     var body: some View {
-        switch (personalExpensesExist, businessExpensesExist) {
-        case (false, false):
-            List {
-                
-            }
-        case (false, true):
-            List{
-                listSection(for: .business)
-            }
-        case (true, false):
-            List{
-                listSection(for: .personal)
-            }
-        case (true, true):
-            List{
-                listSection(for: .personal)
-                listSection(for: .business)
-            }
-        }
-    }
-    
-    private func listSection(for expenseType: ExpenseType) -> some View {
-        Section(expenseType.rawValue.capitalized) {
-            ForEach(expenses.filter({$0.type == expenseType})) { item in
+        List {
+            ForEach(expensesToShow) { item in
                 ExpenseItemView(item: item)
             }
             .onDelete(perform: removeItems)
@@ -58,11 +35,12 @@ struct ExpensesView: View {
         }
     }
     
-    init(sortOrder: [SortDescriptor<ExpenseItem>]) {
+    init(sortOrder: [SortDescriptor<ExpenseItem>], filteredTypes: Set<ExpenseType> ) {
         _expenses = Query(sort: sortOrder)
+        self.filteredTypes = filteredTypes
     }
+    
 }
-
 
 private extension ExpensesView {
     private struct ExpenseItemView: View {
@@ -100,7 +78,7 @@ private extension ExpensesView {
     do {
         let config = ModelConfiguration(isStoredInMemoryOnly: true)
         let modelContainer = try ModelContainer(for: ExpenseItem.self, configurations: config)
-        return ExpensesView(sortOrder: [.init(\ExpenseItem.name)])
+        return ExpensesView(sortOrder: [.init(\ExpenseItem.name)], filteredTypes: .init([.business, .personal]))
             .modelContainer(modelContainer)
     } catch {
         return Text(error.localizedDescription)
