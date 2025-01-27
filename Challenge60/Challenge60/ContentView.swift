@@ -15,8 +15,16 @@ struct ContentView: View {
     @Query(sort: defaultSortOrder) private var users: [User] = []
     @Environment(\.modelContext) private var modelContext
     
-    @State private var sortOrder = defaultSortOrder
-    @State private var activityFilter: Set<Bool> = [false, true]
+    @State private var sortOrder = defaultSortOrder {
+        didSet {
+            save()
+        }
+    }
+    @State private var activityFilter: Set<Bool> = [false, true] {
+        didSet {
+            save()
+        }
+    }
     
     func loadUsers() async {
         guard users.isEmpty else { return }
@@ -97,6 +105,34 @@ struct ContentView: View {
         Button("Reload data", systemImage: "arrow.clockwise") {
             Task {
                 await loadUsers()
+            }
+        }
+    }
+    
+    private enum SettingsKeys: String {
+        case sortOrderKey, activityFilterKey
+    }
+    
+    private func save() {
+        let storage = UserDefaults.standard
+        if let sortOrderData = try? JSONEncoder().encode(sortOrder) {
+            storage.set(sortOrderData, forKey: SettingsKeys.sortOrderKey.rawValue)
+        }
+        if let activityFilterData = try? JSONEncoder().encode(activityFilter) {
+            storage.set(activityFilterData, forKey: SettingsKeys.activityFilterKey.rawValue)
+        }
+    }
+    
+    init() {
+        let storage = UserDefaults.standard
+        if let sortOrderData = storage.data(forKey: SettingsKeys.sortOrderKey.rawValue) {
+            if let sortOrder = try? JSONDecoder().decode([SortDescriptor<User>].self, from: sortOrderData) {
+                self.sortOrder = sortOrder
+            }
+        }
+        if let activityFilterData = storage.data(forKey: SettingsKeys.activityFilterKey.rawValue) {
+            if let activityFilter = try? JSONDecoder().decode(Set<Bool>.self, from: activityFilterData) {
+                self.activityFilter = activityFilter
             }
         }
     }
