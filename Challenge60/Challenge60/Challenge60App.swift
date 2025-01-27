@@ -13,5 +13,6 @@ struct Challenge60App: App {
         WindowGroup {
             ContentView()
         }
+        .modelContainer(for: User.self)
     }
 }

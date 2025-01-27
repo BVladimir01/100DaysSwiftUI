@@ -5,12 +5,17 @@
 //  Created by Vladimir on 27.01.2025.
 //
 
+import SwiftData
 import SwiftUI
 
 struct ContentView: View {
     
-    @State private var users: [User] = []
-    @State private var sortOrder = [SortDescriptor(\User.name), SortDescriptor(\User.age)]
+    static let defaultSortOrder = [SortDescriptor(\User.name), SortDescriptor(\User.age)]
+    
+    @Query(sort: defaultSortOrder) private var users: [User] = []
+    @Environment(\.modelContext) private var modelContext
+    
+    @State private var sortOrder = defaultSortOrder
     @State private var activityFilter: Set<Bool> = [false, true]
     
     func loadUsers() async {
@@ -21,16 +26,17 @@ struct ContentView: View {
             let decoder = JSONDecoder()
             decoder.dateDecodingStrategy = .iso8601
             let decodedUsers = try decoder.decode([User].self, from: data)
-            users = decodedUsers
+            for user in decodedUsers {
+                modelContext.insert(user)
+            }
         } catch {
             print(error.localizedDescription)
-            users = []
         }
     }
     
     var body: some View {
         NavigationStack {
-            UsersView(users: users, sortOrder: sortOrder, activityFilter: activityFilter)
+            UsersView(sortOrder: sortOrder, activityFilter: activityFilter)
             .navigationDestination(for: User.self) { user in
                 DetailView(user: user)
             }
@@ -41,6 +47,12 @@ struct ContentView: View {
                 }
                 ToolbarItem(placement: .primaryAction) {
                     sortingMenu
+                }
+                ToolbarItem(placement: .topBarLeading) {
+                    deleteButton
+                }
+                ToolbarItem(placement: .secondaryAction) {
+                    reloadButton
                 }
             }
         }
@@ -73,6 +85,20 @@ struct ContentView: View {
         }
                             )
         )
+    }
+    
+    private var deleteButton: some View {
+        Button("Delete data", systemImage: "trash") {
+            try? modelContext.delete(model: User.self)
+        }
+    }
+    
+    private var reloadButton: some View {
+        Button("Reload data", systemImage: "arrow.clockwise") {
+            Task {
+                await loadUsers()
+            }
+        }
     }
 }
 

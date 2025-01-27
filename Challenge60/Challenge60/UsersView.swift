@@ -5,15 +5,20 @@
 //  Created by Vladimir on 27.01.2025.
 //
 
+import SwiftData
 import SwiftUI
 
 struct UsersView: View {
     
-    var users: [User]
+    @Query var users: [User]
+    private var filteredUsers: [User] {
+        users.filter({activityFilter.contains($0.isActive)})
+    }
+    private var activityFilter: Set<Bool>
     
     var body: some View {
         List {
-            ForEach(users) { user in
+            ForEach(filteredUsers) { user in
                 NavigationLink(value: user) {
                     HStack(spacing: 10) {
                         Text(user.name)
@@ -26,13 +31,19 @@ struct UsersView: View {
         }
     }
     
-    init(users: [User], sortOrder: [SortDescriptor<User>], activityFilter: Set<Bool>) {
-        let sortedUsers = users.sorted(using: sortOrder)
-        let filteredUsers = sortedUsers.filter({activityFilter.contains($0.isActive)})
-        self.users = filteredUsers
+    init(sortOrder: [SortDescriptor<User>], activityFilter: Set<Bool>) {
+        self._users = Query(sort: sortOrder)
+        self.activityFilter = activityFilter
     }
 }
 
-//#Preview {
-//    UsersView(users: [])
-//}
+#Preview {
+    do {
+        let config = ModelConfiguration(isStoredInMemoryOnly: true)
+        let modelContainer = try ModelContainer(for: User.self, configurations: config)
+        return UsersView(sortOrder: [SortDescriptor(\User.id)], activityFilter: Set([true, false]))
+            .modelContainer(modelContainer)
+    } catch {
+        return Text(error.localizedDescription)
+    }
+}

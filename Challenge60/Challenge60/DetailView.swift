@@ -5,6 +5,7 @@
 //  Created by Vladimir on 27.01.2025.
 //
 
+import SwiftData
 import SwiftUI
 
 struct DetailView: View {
@@ -18,7 +19,7 @@ struct DetailView: View {
                     .font(.title)
                 Text(user.address)
                     .font(.headline)
-                    .padding(.bottom, /*@START_MENU_TOKEN@*/10/*@END_MENU_TOKEN@*/)
+                    .padding(.bottom, 10)
                 Text(user.about)
                     .font(.headline)
             }
@@ -30,5 +31,13 @@ struct DetailView: View {
 }
 
 #Preview {
-    DetailView(user: User(id: "123", isActive: true, name: "LMao", age: 13, company: "company", email: "dfgs.com", address: "London", about: "my info", registered: .now, tags: [], friends: []))
+    do {
+        let config = ModelConfiguration(isStoredInMemoryOnly: true)
+        let modelContainer = try ModelContainer(for: User.self, configurations: config)
+        let user = User(id: "gsdhjljla", isActive: true, name: "Dave", age: 40, company: "company", email: "lmao@gmail.com", address: "London", about: "info about me", registered: .now, tags: [], friends: [])
+        return DetailView(user: user)
+            .modelContainer(modelContainer)
+    } catch {
+        return Text(error.localizedDescription)
+    }
 }
