@@ -14,6 +14,7 @@ struct ContentView: View {
     @State private var activityFilter: Set<Bool> = [false, true]
     
     func loadUsers() async {
+        guard users.isEmpty else { return }
         let url = URL(string: "https://www.hackingwithswift.com/samples/friendface.json")!
         do {
             let (data, _) = try await URLSession.shared.data(from: url)

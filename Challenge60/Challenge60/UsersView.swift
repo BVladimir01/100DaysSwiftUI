@@ -15,7 +15,12 @@ struct UsersView: View {
         List {
             ForEach(users) { user in
                 NavigationLink(value: user) {
-                    Text(user.name)
+                    HStack(spacing: 10) {
+                        Text(user.name)
+                            .font(.title3)
+                        Text(user.age.description)
+                            .font(.caption)
+                    }
                 }
             }
         }
