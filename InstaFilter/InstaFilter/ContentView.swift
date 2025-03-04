@@ -5,49 +5,49 @@
 //  Created by Vladimir on 28.02.2025.
 //
 
+import PhotosUI
+import StoreKit
 import SwiftUI
-import CoreImage
-import CoreImage.CIFilterBuiltins
 
 struct ContentView: View {
     
-    @State private var image: Image?
+    @State var images: [Image] = []
+    @State var imagesChoice: [PhotosPickerItem] = []
+    @Environment(\.requestReview) var requestReview
     
     var body: some View {
         VStack {
-            image?.resizable()
-                .scaledToFit()
-            ContentUnavailableView {
-                Label("No snippets", systemImage: "swift")
-            } description: {
-                Text("Yep, there are none")
-            } actions: {
-                Button("Create") { }
-                Button("Delete") { }
+            ScrollView {
+                ForEach(0..<images.count, id: \.self) { i in
+                    images[i]
+                        .resizable()
+                        .scaledToFit()
+                }
             }
-        }
-        .onAppear {
-            image = Image(.nsx)
-            let filter = CIFilter.crystallize()
-            let amount = 1.0
-            let context = CIContext()
-            let inputImage = UIImage(resource: .nsx)
-            let beginImage = CIImage(image: inputImage)
-            filter.inputImage = beginImage
-            let inputKeys = filter.inputKeys
-            if inputKeys.contains(kCIInputIntensityKey) {
-                filter.setValue(amount, forKey: kCIInputIntensityKey)
+            PhotosPicker(selection: $imagesChoice, maxSelectionCount: 3, matching: .images) {
+                Label("Select photos", systemImage: "photo")
+                    .font(.title)
             }
-            if inputKeys.contains(kCIInputRadiusKey) {
-                filter.setValue(amount*20, forKey: kCIInputRadiusKey)
+            .onChange(of: imagesChoice) {
+                images.removeAll(keepingCapacity: true)
+                Task {
+                    for choice in imagesChoice {
+                        if let image = try await choice.loadTransferable(type: Image.self) {
+                            images.append(image)
+                        }
+                    }
+                }
             }
-            if inputKeys.contains(kCIInputScaleKey) {
-                filter.setValue(amount*10, forKey: kCIInputScaleKey)
+//            .padding(.bottom)
+            ShareLink(item: Image(.nsx), preview: SharePreview("Share nsx", image: Image(.nsx))) {
+                Label("Share", systemImage: "square.and.arrow.up")
+                    .font(.title)
+                    .padding(.vertical)
             }
-            guard let outputImage = filter.outputImage else { return }
-            guard let cgImage = context.createCGImage(outputImage, from: outputImage.extent) else { return }
-            let uiImage = UIImage(cgImage: cgImage)
-            image = Image(uiImage: uiImage)
+            Button("Review request") {
+                requestReview()
+            }
+            .font(.title)
         }
     }
 }
